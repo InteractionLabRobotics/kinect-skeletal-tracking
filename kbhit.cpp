@@ -25,7 +25,7 @@ int _kbhit()
 	tcsetattr( STDIN_FILENO, TCSANOW, &old_termios );
 	fcntl( STDIN_FILENO, F_SETFL, oldf );
 
-	if( ch != EOF ) {
+	if ( ch != EOF ) {
 		ungetc( ch, stdin );
 		return 1;
 	}

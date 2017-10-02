@@ -21,9 +21,9 @@ XnBool g_bCalibrated = FALSE;
 
 #ifdef USE_GLUT
 #if (XN_PLATFORM == XN_PLATFORM_MACOSX)
-        #include <GLUT/glut.h>
+#include <GLUT/glut.h>
 #else
-        #include <GL/glut.h>
+#include <GL/glut.h>
 #endif
 #else
 //#include "opengles.h"
@@ -80,10 +80,10 @@ void StartCapture()
 
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
-        XnUInt32 size;
-        xnOSStrFormat(recordFile, sizeof(recordFile)-1, &size,
-                 "%d_%02d_%02d[%02d_%02d_%02d].oni",
-                timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+	XnUInt32 size;
+	xnOSStrFormat(recordFile, sizeof(recordFile) - 1, &size,
+	              "%d_%02d_%02d[%02d_%02d_%02d].oni",
+	              timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 
 	if (g_pRecorder != NULL)
 	{
@@ -182,7 +182,7 @@ void XN_CALLBACK_TYPE CalibrationStarted(xn::SkeletonCapability& skeleton, XnUse
 
 void XN_CALLBACK_TYPE CalibrationCompleted(xn::SkeletonCapability& skeleton, XnUserID user, XnCalibrationStatus eStatus, void* cxt)
 {
-	printf("Calibration done [%d] %ssuccessfully\n", user, (eStatus == XN_CALIBRATION_STATUS_OK)?"":"un");
+	printf("Calibration done [%d] %ssuccessfully\n", user, (eStatus == XN_CALIBRATION_STATUS_OK) ? "" : "un");
 	if (eStatus == XN_CALIBRATION_STATUS_OK)
 	{
 		if (!g_bCalibrated)
@@ -209,9 +209,9 @@ void DrawProjectivePoints(XnPoint3D& ptIn, int width, double r, double g, double
 	pt[1] = ptIn.Y;
 	pt[2] = 0;
 	glColor4f(r,
-		g,
-		b,
-		1.0f);
+	          g,
+	          b,
+	          1.0f);
 	glPointSize(width);
 	glVertexPointer(3, GL_FLOAT, 0, pt);
 	glDrawArrays(GL_POINTS, 0, 1);
@@ -233,11 +233,11 @@ void glutDisplay (void)
 	xn::SceneMetaData sceneMD;
 	xn::DepthMetaData depthMD;
 	g_DepthGenerator.GetMetaData(depthMD);
-	#ifdef USE_GLUT
+#ifdef USE_GLUT
 	glOrtho(0, depthMD.XRes(), depthMD.YRes(), 0, -1.0, 1.0);
-	#else
+#else
 	glOrthof(0, depthMD.XRes(), depthMD.YRes(), 0, -1.0, 1.0);
-	#endif
+#endif
 
 	glDisable(GL_TEXTURE_2D);
 
@@ -247,26 +247,26 @@ void glutDisplay (void)
 		g_Context.WaitOneUpdateAll(g_DepthGenerator);
 	}
 
-		// Process the data
-		//DRAW
-		g_DepthGenerator.GetMetaData(depthMD);
-		g_UserGenerator.GetUserPixels(0, sceneMD);
-		DrawDepthMap(depthMD, sceneMD, g_nPlayer);
+	// Process the data
+	//DRAW
+	g_DepthGenerator.GetMetaData(depthMD);
+	g_UserGenerator.GetUserPixels(0, sceneMD);
+	DrawDepthMap(depthMD, sceneMD, g_nPlayer);
 
-		if (g_nPlayer != 0)
+	if (g_nPlayer != 0)
+	{
+		XnPoint3D com;
+		g_UserGenerator.GetCoM(g_nPlayer, com);
+		if (com.Z == 0)
 		{
-			XnPoint3D com;
-			g_UserGenerator.GetCoM(g_nPlayer, com);
-			if (com.Z == 0)
-			{
-				g_nPlayer = 0;
-				FindPlayer();
-			}
+			g_nPlayer = 0;
+			FindPlayer();
 		}
+	}
 
-	#ifdef USE_GLUT
+#ifdef USE_GLUT
 	glutSwapBuffers();
-	#endif
+#endif
 }
 
 #ifdef USE_GLUT
@@ -353,7 +353,7 @@ int main(int argc, char **argv)
 	CHECK_RC(rc, "Find user generator");
 
 	if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
-		!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION))
+	        !g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION))
 	{
 		printf("User generator doesn't support either skeleton or pose detection.\n");
 		return XN_STATUS_ERROR;
@@ -374,12 +374,12 @@ int main(int argc, char **argv)
 	CHECK_RC(rc, "Register to pose detected");
 
 
-	#ifdef USE_GLUT
+#ifdef USE_GLUT
 
 	glInit(&argc, argv);
 	glutMainLoop();
 
-	#else
+#else
 
 	if (!opengles_init(GL_WIN_SIZE_X, GL_WIN_SIZE_Y, &display, &surface, &context))
 	{
@@ -402,5 +402,5 @@ int main(int argc, char **argv)
 
 	CleanupExit();
 
-	#endif
+#endif
 }
